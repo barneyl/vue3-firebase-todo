@@ -7,16 +7,21 @@
       B's ToDo
     </div>
 
-    <div class="field is-grouped" mb-5>
-      <p class="control is-expanded">
-        <input class="input" type="text" placeholder="Add a Todo">
-      </p>
-      <p class="control">
-        <a class="button is-info">
-          Add
-        </a>
-      </p>
-    </div>
+    <!-- submit handler, prevent = prevents page from being reloaded when submitting -->
+    <form @submit.prevent="addTodo">
+      <div class="field is-grouped mb-5">
+        <p class="control is-expanded">
+          <input class="input" type="text" placeholder="Add a Todo">
+        </p>
+        <p class="control">
+          <!-- Replace a tag with button so it can be submitted with form -->
+          <button class="button is-info">
+            Add
+          </button>
+        </p>
+      </div>
+    </form>
+
 
     <!-- v-for displays i in 3 items; mb-5: margin bottom -->
     <div v-for="todo in todos" class="card mb-5">
@@ -64,6 +69,10 @@ const todos = ref([
     done: false
   }
 ])
+
+const addTodo = () => {
+  console.log('add todo')
+}
 
 
 </script>
