@@ -4,7 +4,7 @@
     <!-- Bulma class: -->
 
     <div class="title has-text-centered">
-      B ToDo
+      B's ToDo
     </div>
 
     <div class="field is-grouped" mb-5>
@@ -18,13 +18,13 @@
       </p>
     </div>
 
-    <!-- v-for displays 3 items; mb-5: margin bottom -->
-    <div v-for="i in 3" class="card mb-5">
+    <!-- v-for displays i in 3 items; mb-5: margin bottom -->
+    <div v-for="todo in todos" class="card mb-5">
       <div class="card-content">
         <div class="content">
           <div class="columns is-mobile is-vcentered">
             <div class="column">
-              Shave head
+              {{ todo.content }}
             </div>
             <!-- is5 reduces size of column thus moving buttons to the right -->
             <!-- has-text-right right justifies text -->
@@ -46,6 +46,28 @@
   </div>
 </template>
 
+<script setup>
+
+import { ref } from 'vue'
+
+
+/* todos */
+const todos = ref([
+  {
+    id: 'id1',
+    content: 'Sshave head',
+    done: false
+  },
+  {
+    id: 'id2',
+    content: 'Wash head',
+    done: false
+  }
+])
+
+
+</script>
+
 <style>
 @import 'bulma/css/bulma.min.css';
 
@@ -58,9 +80,9 @@
 <!-- <script setup>import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 
-</script><template>
+<template>
   <header><img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" /><div class="wrapper"><HelloWorld msg="You did it!" /></div></header><main><TheWelcome /></main>
-</template><style scoped>header {
+<style scoped>header {
   line-height: 1.5;
 }
 
