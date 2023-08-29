@@ -11,11 +11,12 @@
     <form @submit.prevent="addTodo">
       <div class="field is-grouped mb-5">
         <p class="control is-expanded">
-          <input class="input" type="text" placeholder="Add a Todo">
+          <input v-model="newTodoContent" class="input" type="text" placeholder="Add a Todo">
         </p>
         <p class="control">
           <!-- Replace a tag with button so it can be submitted with form -->
-          <button class="button is-info">
+          <!-- disabled: disables the add button if the text field is empty -->
+          <button class="button is-info" :disabled="!newTodoContent">
             Add
           </button>
         </p>
@@ -38,7 +39,8 @@
                 &check;
               </button>
               <!-- ml-2: margin left 2 to give left button some spacing -->
-              <button class="button is-danger ml-2">
+              <!-- click handler sends data to function and provides id to delete -->
+              <button class="button is-danger ml-2" @click="deleteTodo(todo.id)">
                 &cross;
               </button>
             </div>
@@ -53,14 +55,16 @@
 
 <script setup>
 
-import { ref } from 'vue'
+import { openBlock, ref, setBlockTracking, setTransitionHooks } from 'vue';
+import { v4 as uuidv4 } from 'uuid'
 
 
 /* todos */
 const todos = ref([
+  // Hard coded todos so you don't have to re-enter each time during testing:
   {
     id: 'id1',
-    content: 'Sshave head',
+    content: 'Shave head',
     done: false
   },
   {
@@ -68,12 +72,37 @@ const todos = ref([
     content: 'Wash head',
     done: false
   }
+
 ])
 
+// If something is entered here other than empty string, it will show in the main web view
+const newTodoContent = ref('')
+
 const addTodo = () => {
-  console.log('add todo')
+  //console.log('add todo')
+
+  const newTodo = {
+    id: uuidv4(),  // uuidv4 provides unique ID during no-backend development;
+    // later firebase will do this for us
+    content: newTodoContent.value,
+    done: false
+  }
+  console.log('newTodo: ', newTodo)
+
+  // Unshift adds so newest todo is at the top when viewed
+  todos.value.unshift(newTodo)
+  // Clear the new todo input field:
+  newTodoContent.value = ''
 }
 
+// delete
+const deleteTodo = id => {
+  //console.log('Delete todo:', id)
+
+  // To delete a todo with local ref: we need to filter out all todos except
+  // the ones with ids we want to keep:
+  todos.value = todos.value.filter(todo => todo.id !== id)
+}
 
 </script>
 
