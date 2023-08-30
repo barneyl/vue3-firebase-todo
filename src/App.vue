@@ -120,6 +120,9 @@ onMounted(/*async*/() => {
     todos.value = fbTodos
     */
 
+  // onSnapshot will be called anytime there is a change in the collection
+  // thus, this will reload the todos ref and will cause our main page
+  // to reload as well:
   // Result of query will be in querySnapshot:
   onSnapshot(todosCollectionRef, (querySnapshot) => {
     const fbTodos = [];
