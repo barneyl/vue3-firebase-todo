@@ -57,12 +57,18 @@
 <script setup>
 
 import { ref, onMounted } from 'vue';
-import { v4 as uuidv4 } from 'uuid'
 
-import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
+// No longer need this since we aren't storing rows locally and have
+// switched to Firebase:
+//import { v4 as uuidv4 } from 'uuid'
+
+import { collection, query, where, getDocs, onSnapshot, addDoc } from 'firebase/firestore';
 
 // @/ = alias to source folder
 import { db } from '@/firebase'
+
+// Firebase refs:
+const todosCollectionRef = collection(db, "todos")
 
 
 /* todos */
@@ -115,7 +121,7 @@ onMounted(/*async*/() => {
     */
 
   // Result of query will be in querySnapshot:
-  onSnapshot(collection(db, "todos"), (querySnapshot) => {
+  onSnapshot(todosCollectionRef, (querySnapshot) => {
     const fbTodos = [];
     querySnapshot.forEach((doc) => {
       //cities.push(doc.data().name);
@@ -138,6 +144,7 @@ onMounted(/*async*/() => {
 const newTodoContent = ref('')
 
 const addTodo = () => {
+  /*
   //console.log('add todo')
 
   const newTodo = {
@@ -150,6 +157,14 @@ const addTodo = () => {
 
   // Unshift adds so newest todo is at the top when viewed
   todos.value.unshift(newTodo)
+  */
+
+  // Removing await to allow the last line to clear to todo text field
+  // immediately after pressing "Add" button otherwise there would be a delay:
+  /*await*/ addDoc(todosCollectionRef, {
+  content: newTodoContent.value,
+  done: false
+});
   // Clear the new todo input field:
   newTodoContent.value = ''
 }
