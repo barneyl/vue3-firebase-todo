@@ -56,10 +56,10 @@
 
 <script setup>
 
-import { ref, onMounted, setBlockTracking, setTransitionHooks } from 'vue';
+import { ref, onMounted } from 'vue';
 import { v4 as uuidv4 } from 'uuid'
 
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 
 // @/ = alias to source folder
 import { db } from '@/firebase'
@@ -84,35 +84,55 @@ const todos = ref([
 ])
 
 // Get todos from Firebase DB in this onMounted hook:
-// Needed to add "async keyword to onMounted because we are using await
+// only need to add "async" keyword to onMounted because we are using await
 // in the body of this function
-onMounted(async () => {
-  //console.log('mounted db')
+onMounted(/*async*/() => {
+  /*
+    //console.log('mounted db')
+  
+    //, where("capital", "==", true)
+    const q = query(collection(db, "todos"))
+  
+    // await added because it will take some time to fetch from the database
+    const querySnapshot = await getDocs(q)
+  
+    let fbTodos = []
+  
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data())
+  
+      const todo = {
+        id: doc.id,
+        content: doc.data().content,
+        done: doc.data().done
+      }
+      fbTodos.push(todo)
+    })
+  
+    // Once fbTodos have all of the todo rows, set todos value to it:
+    todos.value = fbTodos
+    */
 
-  //, where("capital", "==", true)
-  const q = query(collection(db, "todos"))
+  // Result of query will be in querySnapshot:
+  onSnapshot(collection(db, "todos"), (querySnapshot) => {
+    const fbTodos = [];
+    querySnapshot.forEach((doc) => {
+      //cities.push(doc.data().name);
+      const todo = {
+        id: doc.id,
+        content: doc.data().content,
+        done: doc.data().done
+      }
+      fbTodos.push(todo)
+    })
 
-  // await added because it will take some time to fetch from the database
-  const querySnapshot = await getDocs(q)
-
-  let fbTodos = []
-
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data())
-
-    const todo = {
-      id: doc.id,
-      content: doc.data().content,
-      done: doc.data().done
-    }
-    fbTodos.push(todo)
+    // Once fbTodos have all of the todo rows, set todos value to it:
+    todos.value = fbTodos
   })
+  //console.log("Current cities in CA: ", cities.join(", "));
+});
 
-  // Once fbTodos have all of the todo rows, set todos value to it:
-  todos.value = fbTodos
-
-})
 
 // If something is entered here other than empty string, it will show in the main web view
 const newTodoContent = ref('')
