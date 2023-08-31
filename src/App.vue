@@ -55,35 +55,38 @@
 </template>
 
 <script setup>
-
+//
+// Imports
+//
 import { ref, onMounted } from 'vue';
-
-// No longer need this since we aren't storing rows locally and have
-// switched to Firebase:
-//import { v4 as uuidv4 } from 'uuid'
-
 import {
   collection, onSnapshot,
   addDoc, deleteDoc, doc, updateDoc,
   query, orderBy, limit
 } from 'firebase/firestore';
+import { db } from '@/firebase'  // @/ = alias to source folder
 
-// @/ = alias to source folder
-import { db } from '@/firebase'
+// Archived imports:
+// uuid can be used to create unique identifiers; 
+// No longer needed since we aren't storing rows locally and have
+// switched to Firebase:
+//import { v4 as uuidv4 } from 'uuid'
 
 // 
 // Firebase refs:
-// - Set a variable since this will be repeated on calls to Firebase:
 //
+// - Set a variable since this will be repeated on calls to Firebase:
 const todosCollectionRef = collection(db, "todos")
-
-// Can add third 'limit' parameter limit :
+// Can add optional third 'limit' parameter to limit shown todos rows :
 const todosCollectionQuery = query(todosCollectionRef, orderBy('date', 'desc'))
 
-
-/* todos */
+//
+// Refs:
+// 
 const todos = ref([
-  // Hard coded todos so you don't have to re-enter each time during testing:
+
+  // When first developing an app without a database backend, we can 
+  // hard code todos so we don't have to re-enter each time during testing:
   /*
   {
     id: 'id1',
@@ -98,6 +101,11 @@ const todos = ref([
   */
 
 ])
+
+
+//
+// Hooks:
+//
 
 // Get todos from Firebase DB in this onMounted hook:
 // only need to add "async" keyword to onMounted because we are using await
