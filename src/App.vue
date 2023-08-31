@@ -72,19 +72,10 @@ import { db } from '@/firebase'  // @/ = alias to source folder
 // switched to Firebase:
 //import { v4 as uuidv4 } from 'uuid'
 
-// 
-// Firebase refs:
-//
-// - Set a variable since this will be repeated on calls to Firebase:
-const todosCollectionRef = collection(db, "todos")
-// Can add optional third 'limit' parameter to limit shown todos rows :
-const todosCollectionQuery = query(todosCollectionRef, orderBy('date', 'desc'))
-
 //
 // Refs:
 // 
 const todos = ref([
-
   // When first developing an app without a database backend, we can 
   // hard code todos so we don't have to re-enter each time during testing:
   /*
@@ -99,16 +90,25 @@ const todos = ref([
     done: true
   }
   */
-
 ])
+// Store the newly entered todo in this ref. 
+// If something is entered here other than empty string, 
+// it will show in the main web view:
+const newTodoContent = ref('')
 
+// 
+// Firebase refs:
+//
+// - Set a variable since this will be repeated on calls to Firebase:
+const todosCollectionRef = collection(db, "todos")
+// Can add optional third 'limit' parameter to limit shown todos rows :
+const todosCollectionQuery = query(todosCollectionRef, orderBy('date', 'desc'))
 
 //
 // Hooks:
 //
-
 // Get todos from Firebase DB in this onMounted hook:
-// only need to add "async" keyword to onMounted because we are using await
+// only need to add "async" keyword to onMounted if we are using await
 // in the body of this function
 onMounted(/*async*/() => {
   /*
@@ -140,7 +140,7 @@ onMounted(/*async*/() => {
 
   // onSnapshot will be called anytime there is a change in the collection
   // thus, this will reload the todos ref and will cause our main page
-  // to reload as well:
+  // to reload as well if changed by another browser or on the db itself:
   // Result of query will be in querySnapshot:
   onSnapshot(todosCollectionQuery, (querySnapshot) => {
     const fbTodos = [];
@@ -159,9 +159,9 @@ onMounted(/*async*/() => {
   //console.log("Current cities in CA: ", cities.join(", "));
 });
 
-
-// If something is entered here other than empty string, it will show in the main web view
-const newTodoContent = ref('')
+//
+// Methods
+// 
 
 const addTodo = () => {
   /*
@@ -179,8 +179,11 @@ const addTodo = () => {
   todos.value.unshift(newTodo)
   */
 
-  // Removing await to allow the last line to clear to todo text field
+  // Removing await allows the last code line below to clear to todo text field
   // immediately after pressing "Add" button otherwise there would be a delay:
+  // We are choosing not to wait for the todo to be finished added to the db 
+  // before returning in order to give a user experience by clearing the new todo 
+  // text right after pressing the "Add" button
   /*await*/ addDoc(todosCollectionRef, {
   content: newTodoContent.value,
   done: false,
@@ -190,11 +193,11 @@ const addTodo = () => {
   newTodoContent.value = ''
 }
 
-// delete
 const deleteTodo = id => {
   //console.log('Delete todo:', id)
 
-  // To delete a todo with local ref: we need to filter out all todos except
+  // Before using a database, to delete a todo with local ref: 
+  // we need to filter out all todos except
   // the ones with ids we want to keep:
   // todos.value = todos.value.filter(todo => todo.id !== id)
 
@@ -204,7 +207,7 @@ const deleteTodo = id => {
 const toggleDone = id => {
   console.log('toggleDone', id)
 
-  /// todo is a placeholder
+  // Look up id of todo to toggle;  todo is a placeholder:
   const index = todos.value.findIndex(todo => todo.id === id)
   console.log('index to toggle', index)
 
@@ -212,6 +215,8 @@ const toggleDone = id => {
   // updating document in firebase:
   //todos.value[index].done = !todos.value[index].done
 
+  // Update the doc in firebase by simply adding the key and value of the
+  // document we want to update:
   // No need to keep await keyword since we're not doing anything after we update:
   updateDoc(doc(todosCollectionRef, id), {
     done: !todos.value[index].done
@@ -234,6 +239,8 @@ const toggleDone = id => {
   text-decoration: line-through;
 }
 </style>
+
+<!-- Original Vue default page -->
 <!-- <script setup>import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 
