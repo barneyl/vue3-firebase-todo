@@ -62,12 +62,15 @@ import { ref, onMounted } from 'vue';
 // switched to Firebase:
 //import { v4 as uuidv4 } from 'uuid'
 
-import { collection, query, where, getDocs, onSnapshot, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, onSnapshot, addDoc, deleteDoc, doc } from 'firebase/firestore';
 
 // @/ = alias to source folder
 import { db } from '@/firebase'
 
+// 
 // Firebase refs:
+// - Set a variable since this will be repeated on calls to Firebase:
+//
 const todosCollectionRef = collection(db, "todos")
 
 
@@ -178,7 +181,9 @@ const deleteTodo = id => {
 
   // To delete a todo with local ref: we need to filter out all todos except
   // the ones with ids we want to keep:
-  todos.value = todos.value.filter(todo => todo.id !== id)
+  // todos.value = todos.value.filter(todo => todo.id !== id)
+
+  deleteDoc(doc(todosCollectionRef, id))
 }
 
 const toggleDone = id => {
