@@ -62,7 +62,7 @@ import { ref, onMounted } from 'vue';
 // switched to Firebase:
 //import { v4 as uuidv4 } from 'uuid'
 
-import { collection, query, where, getDocs, onSnapshot, addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, onSnapshot, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 
 // @/ = alias to source folder
 import { db } from '@/firebase'
@@ -193,7 +193,15 @@ const toggleDone = id => {
   const index = todos.value.findIndex(todo => todo.id === id)
   console.log('index to toggle', index)
 
-  todos.value[index].done = !todos.value[index].done
+  // No longer need to manipulate value locally since we're now
+  // updating document in firebase:
+  //todos.value[index].done = !todos.value[index].done
+
+  // No need to keep await keyword since we're not doing anything after we update:
+  updateDoc(doc(todosCollectionRef, id), {
+    done: !todos.value[index].done
+  })
+
 }
 
 </script>
