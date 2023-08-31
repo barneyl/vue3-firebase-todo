@@ -62,7 +62,11 @@ import { ref, onMounted } from 'vue';
 // switched to Firebase:
 //import { v4 as uuidv4 } from 'uuid'
 
-import { collection, query, where, getDocs, onSnapshot, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import {
+  collection, onSnapshot,
+  addDoc, deleteDoc, doc, updateDoc,
+  query, orderBy, limit
+} from 'firebase/firestore';
 
 // @/ = alias to source folder
 import { db } from '@/firebase'
@@ -72,6 +76,9 @@ import { db } from '@/firebase'
 // - Set a variable since this will be repeated on calls to Firebase:
 //
 const todosCollectionRef = collection(db, "todos")
+
+// Can add third 'limit' parameter limit :
+const todosCollectionQuery = query(todosCollectionRef, orderBy('date', 'desc'))
 
 
 /* todos */
@@ -127,10 +134,9 @@ onMounted(/*async*/() => {
   // thus, this will reload the todos ref and will cause our main page
   // to reload as well:
   // Result of query will be in querySnapshot:
-  onSnapshot(todosCollectionRef, (querySnapshot) => {
+  onSnapshot(todosCollectionQuery, (querySnapshot) => {
     const fbTodos = [];
     querySnapshot.forEach((doc) => {
-      //cities.push(doc.data().name);
       const todo = {
         id: doc.id,
         content: doc.data().content,
@@ -169,7 +175,8 @@ const addTodo = () => {
   // immediately after pressing "Add" button otherwise there would be a delay:
   /*await*/ addDoc(todosCollectionRef, {
   content: newTodoContent.value,
-  done: false
+  done: false,
+  date: Date.now()
 });
   // Clear the new todo input field:
   newTodoContent.value = ''
