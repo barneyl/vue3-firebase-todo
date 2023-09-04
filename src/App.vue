@@ -4,7 +4,7 @@
     <!-- Bulma class: -->
 
     <div class="title has-text-centered">
-      B's ToDo
+      <h1> B's ToDo </h1>
     </div>
 
     <!-- submit handler, prevent = prevents page from being reloaded when submitting -->
@@ -233,10 +233,41 @@ const toggleDone = id => {
   max-width: 400px;
   padding: 20px;
   margin: 0 auto;
+
+  --background-color-primary: #982c2c;
 }
 
 .line-through {
   text-decoration: line-through;
+}
+
+/* Define styles for the root window with dark mode preference
+ */
+
+@media (prefers-color-scheme: dark) {
+
+  h1,
+  p,
+  div {
+    color: white;
+  }
+
+  div {
+    background-color: black;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+
+  h1,
+  p,
+  div {
+    color: black;
+  }
+
+  div {
+    background-color: white;
+  }
 }
 </style>
 
