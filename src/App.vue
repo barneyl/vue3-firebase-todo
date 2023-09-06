@@ -1,9 +1,16 @@
 <template>
-  <RouterLink to="/">ToDos</RouterLink> |
-  <RouterLink to="/stats">Stats</RouterLink>
+  <NavBar />
+
   <RouterView />
 </template>
 
+
+<script setup>
+
+// Imports:
+import NavBar from '@/components/Layout/NavBar.vue'
+
+</script>
 
 <!-- Original Vue default page -->
 <!-- <script setup>import HelloWorld from './components/HelloWorld.vue'
