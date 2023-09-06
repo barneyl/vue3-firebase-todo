@@ -1,5 +1,13 @@
 # vue3-firebase-todo
 
+This is a todo web app that keeps track of todos for 1 user using vue (for the front end), Bulma framework (to manage CSS), and Firebase as the backend storage of todos.  Additional features/notes:
+* Basic dark mode support added
+* Requires to be run in local dev server mode in order to view frontend
+
+Future updates: 
+* Multiple authenticated users
+* Draggable todos allowing reordering
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
