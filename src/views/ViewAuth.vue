@@ -14,7 +14,7 @@
         <div class="card auth-form">
             <div class="card-content">
                 <div class="title has-text-centered">
-                    Login
+                    {{ formTitle }}
                 </div>
                 <div class="content">
                     Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida
@@ -29,10 +29,15 @@
 <script setup>
 
 // Imports:
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 // Register/Login
 const register = ref(false)
+
+// Form title
+const formTitle = computed(() => {
+    return register.value ? "Register" : "Login"
+})
 
 </script>
 
