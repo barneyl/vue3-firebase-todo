@@ -21,13 +21,15 @@
                     <div class="field">
                         <label class="label">Email</label>
                         <div class="control">
-                            <input class="input" type="email" placeholder="e.g. alexsmith@gmail.com">
+                            <input v-model="credentials.email" class="input" type="email"
+                                placeholder="e.g. alexsmith@gmail.com">
                         </div>
                     </div>
                     <div class="field">
                         <label class="label">Password</label>
                         <div class="control">
-                            <input class="input" type="password" placeholder="Enter a password">
+                            <input v-model="credentials.password" class="input" type="password"
+                                placeholder="Enter a password">
                         </div>
                     </div>
 
@@ -49,7 +51,7 @@
 <script setup>
 
 // Imports:
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 // Register/Login
 const register = ref(false)
@@ -62,7 +64,27 @@ const formTitle = computed(() => {
 //Submit
 const onSubmit = () => {
     console.log('form submited')
+    if (!credentials.email || !credentials.password) {
+        alert("Please enter an email and password")
+    }
+    else {
+        if (register.value) {
+            console.log("Register user with these credentials", credentials)
+        }
+        else {
+            console.log("Login user with these credentials:", credentials)
+        }
+    }
 }
+
+//Credentials:
+const credentials = reactive({
+    // Two properties:
+    // Can type something here to test if input fields hookedup:
+    email: '',
+    password: ''
+})
+
 </script>
 
 <style>
