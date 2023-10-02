@@ -151,7 +151,13 @@ onMounted(/*async*/() => {
                 content: doc.data().content,
                 done: doc.data().done
             }
-            fbTodos.push(todo)
+
+            // Only show todos that haven't been archived:
+            if ((doc.get('archivedate') === undefined)) {
+                console.log("Archive date:", doc.data().content)
+
+                fbTodos.push(todo)
+            }
         })
 
         // Once fbTodos have all of the todo rows, set todos value to it:
