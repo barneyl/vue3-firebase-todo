@@ -54,9 +54,11 @@
         </div>
 
         <!-- archive all button -->
-        <button @click="archiveDone()" class="button is-info">
-            Archive all Done ToDos
-        </button>
+        <div class="archivedone has-text-centered">
+            <button @click="archiveDone()" class="button is-info">
+                Archive all Done ToDos
+            </button>
+        </div>
 
     </div>
 </template>
