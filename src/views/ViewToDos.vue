@@ -52,6 +52,12 @@
                 </div>
             </div>
         </div>
+
+        <!-- archive all button -->
+        <button @click="archiveDone()" class="button is-info">
+            Archive all Done ToDos
+        </button>
+
     </div>
 </template>
 
@@ -154,7 +160,7 @@ onMounted(/*async*/() => {
 
             // Only show todos that haven't been archived:
             if ((doc.get('archivedate') === undefined)) {
-                console.log("Archive date:", doc.data().content)
+                //console.log("Archive date:", doc.data().content)
 
                 fbTodos.push(todo)
             }
@@ -228,6 +234,14 @@ const toggleDone = id => {
     updateDoc(doc(todosCollectionRef, id), {
         done: !todos.value[index].done
     })
+
+}
+
+const archiveDone = () => {
+    console.log("archive done method")
+
+    // Loop through all todos on the screen, if they are done, mark with current 
+    // timestamp and the auto update will remove them from the screen 
 
 }
 
