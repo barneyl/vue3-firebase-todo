@@ -71,6 +71,7 @@ import { ref, onMounted } from 'vue';
 import {
     collection, onSnapshot,
     addDoc, deleteDoc, doc, updateDoc,
+    Timestamp,
     query, orderBy, limit
 } from 'firebase/firestore';
 import { db } from '@/firebase'  // @/ = alias to source folder
@@ -243,8 +244,22 @@ const archiveDone = () => {
     console.log("archive done method")
 
     // Loop through all todos on the screen, if they are done, mark with current 
-    // timestamp and the auto update will remove them from the screen 
+    // timestamp and the auto update will remove them from the screen:
 
+    todos.value.forEach(
+        (mytodo) => {
+            //console.log("archive processing", mytodo.id, mytodo)
+
+            if (mytodo.done) {
+                console.log("Archiving todo marked Done:", mytodo)
+
+                updateDoc(doc(todosCollectionRef, mytodo.id), {
+                    archivedate: Timestamp.fromDate(new Date)
+                })
+            }
+
+
+        })
 }
 
 </script>
