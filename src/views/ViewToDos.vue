@@ -55,7 +55,7 @@
 
         <!-- archive all button -->
         <div class="archivedone has-text-centered">
-            <button @click="archiveDone()" class="button is-info">
+            <button @click="archiveDone()" class="button is-info" :disabled="someTodosDone ? false : true">
                 Archive all Done ToDos
             </button>
         </div>
@@ -106,6 +106,9 @@ const todos = ref([
 // it will show in the main web view:
 const newTodoContent = ref('')
 
+// Keep a bool for any todos marked done for enabling the archive button:
+const someTodosDone = ref(false)
+
 // 
 // Firebase refs:
 //
@@ -154,6 +157,7 @@ onMounted(/*async*/() => {
     // Result of query will be in querySnapshot:
     onSnapshot(todosCollectionQuery, (querySnapshot) => {
         const fbTodos = [];
+        someTodosDone.value = false;
         querySnapshot.forEach((doc) => {
             const todo = {
                 id: doc.id,
@@ -166,6 +170,12 @@ onMounted(/*async*/() => {
                 //console.log("Archive date:", doc.data().content)
 
                 fbTodos.push(todo)
+
+                // Look only for done but not archived todos:
+                if (doc.data().done == true) {
+                    console.log("Found done:", doc.data().content)
+                    someTodosDone.value = true
+                }
             }
         })
 
